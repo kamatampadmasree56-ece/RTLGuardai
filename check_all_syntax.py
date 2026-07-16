@@ -12,7 +12,7 @@ for filepath in js_files:
     result = subprocess.run(
         ['node', '--input-type=module'],
         input=open(filepath, encoding='utf-8', errors='replace').read(),
-        capture_output=True, text=True
+        capture_output=True, text=True, encoding='utf-8'
     )
     # Node will give SyntaxError if parsing fails
     if result.returncode != 0 and 'SyntaxError' in result.stderr:
