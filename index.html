@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RTLGuard AI — Production-ready Verilog/SystemVerilog RTL verification platform with AI-powered bug detection, testbench generation, coverage analysis and visualization for VLSI engineers.">
+    <meta name="keywords" content="RTL verification, Verilog, SystemVerilog, VLSI, EDA, testbench, RTL analysis, semiconductor">
+    <title>RTLGuard AI — Next-Gen Semiconductor RTL Verification Platform</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Import Map: resolve bare module specifiers to CDN URLs -->
+    <script type="importmap">
+    {
+      "imports": {
+        "react":            "https://esm.sh/react@18.2.0",
+        "react-dom":        "https://esm.sh/react-dom@18.2.0",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+        "lucide-react":     "https://esm.sh/lucide-react@0.344.0"
+      }
+    }
+    </script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Outfit', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+            colors: {
+              cyber: {
+                black:  '#030712',
+                dark:   '#070a13',
+                card:   'rgba(11, 16, 30, 0.65)',
+                teal:   '#00f2fe',
+                blue:   '#4facfe',
+                purple: '#7f00ff',
+                neon:   '#e100ff',
+                green:  '#00ff88',
+                amber:  '#f59e0b',
+              }
+            },
+            animation: {
+              'pulse-slow':    'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'glow-pulse':    'glowPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'slide-in-up':   'slideInUp 0.4s ease-out',
+              'slide-in-right':'slideInRight 0.3s ease-out',
+              'fade-in':       'fadeIn 0.3s ease-out',
+              'count-up':      'countUp 0.6s ease-out',
+              'shimmer':       'shimmer 2s infinite',
+              'bounce-gentle': 'bounceGentle 2s infinite',
+            },
+            keyframes: {
+              glowPulse: {
+                '0%, 100%': { opacity: '0.2', transform: 'scale(1)' },
+                '50%':      { opacity: '0.6', transform: 'scale(1.05)' },
+              },
+              slideInUp: {
+                '0%':   { transform: 'translateY(20px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)',    opacity: '1' },
+              },
+              slideInRight: {
+                '0%':   { transform: 'translateX(20px)', opacity: '0' },
+                '100%': { transform: 'translateX(0)',     opacity: '1' },
+              },
+              fadeIn: {
+                '0%':   { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              shimmer: {
+                '0%':   { backgroundPosition: '-1000px 0' },
+                '100%': { backgroundPosition: '1000px 0' },
+              },
+              bounceGentle: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%':      { transform: 'translateY(-6px)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- Monaco Editor -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script>
+
+    <!-- JSZip (for ZIP upload handling) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <!-- jsPDF (for PDF export) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./src/index.css">
+</head>
+<body class="bg-cyber-black text-gray-100 font-sans min-h-screen overflow-x-hidden antialiased selection:bg-cyber-teal/30 selection:text-white">
+    <!-- Loading spinner shown until React mounts -->
+    <div id="root" class="min-h-screen flex flex-col">
+        <div id="boot-loader" style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#030712;gap:20px;">
+            <div style="width:56px;height:56px;border:3px solid rgba(0,242,254,0.15);border-top:3px solid #00f2fe;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+            <div style="font-family:'JetBrains Mono',monospace;color:#00f2fe;font-size:13px;letter-spacing:0.15em;opacity:0.8;">RTLGuard AI — Loading</div>
+            <div style="font-family:monospace;color:#4b5563;font-size:11px;">Initializing analysis engine...</div>
+        </div>
+    </div>
+    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+    <script type="module" src="./src/main.js" onerror="document.getElementById('boot-loader').innerHTML='<div style=\'color:#ff4060;font-family:monospace;font-size:14px;padding:2rem;text-align:center;\'>⚠ Failed to load RTLGuard AI.<br><small style=\'color:#6b7280;font-size:11px;\'>Check your internet connection — the app requires access to esm.sh CDN.</small></div>'"></script>
+</body>
+</html>
