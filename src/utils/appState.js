@@ -13,17 +13,47 @@ import {
 const AppContext = createContext();
 
 // ─────────────────────────────────────────────────
-// Helpers — localStorage session
+// Safe localStorage wrapper — survives SecurityError
+// (private browsing, sandboxed iframes, strict mobile)
+// ─────────────────────────────────────────────────
+const _memoryStore = {};
+
+function safeStorageGet(key) {
+    try {
+        return localStorage.getItem(key);
+    } catch {
+        return _memoryStore[key] ?? null;
+    }
+}
+
+function safeStorageSet(key, value) {
+    try {
+        localStorage.setItem(key, value);
+    } catch {
+        _memoryStore[key] = value;
+    }
+}
+
+function safeStorageRemove(key) {
+    try {
+        localStorage.removeItem(key);
+    } catch {
+        delete _memoryStore[key];
+    }
+}
+
+// ─────────────────────────────────────────────────
+// Helpers — session persistence
 // ─────────────────────────────────────────────────
 const SESSION_KEY = 'rtlguard_user';
 
 function saveSession(user) {
-    localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+    safeStorageSet(SESSION_KEY, JSON.stringify(user));
 }
 
 function loadSession() {
     try {
-        const raw = localStorage.getItem(SESSION_KEY);
+        const raw = safeStorageGet(SESSION_KEY);
         return raw ? JSON.parse(raw) : null;
     } catch {
         return null;
@@ -31,7 +61,7 @@ function loadSession() {
 }
 
 function clearSession() {
-    localStorage.removeItem(SESSION_KEY);
+    safeStorageRemove(SESSION_KEY);
 }
 
 // ─────────────────────────────────────────────────
@@ -77,7 +107,7 @@ export function AppStateProvider({ children }) {
     const [sidebarOpen, setSidebarOpen]   = useState(true);
 
     // ── Theme State
-    const [theme, setTheme] = useState(() => localStorage.getItem('rtlguard_theme') || 'dark');
+    const [theme, setTheme] = useState(() => safeStorageGet('rtlguard_theme') || 'dark');
 
     // ── UI feedback
     const [loading, setLoading]   = useState(false);
@@ -87,7 +117,7 @@ export function AppStateProvider({ children }) {
     const toggleTheme = () => {
         const newTheme = theme === 'dark' ? 'light' : 'dark';
         setTheme(newTheme);
-        localStorage.setItem('rtlguard_theme', newTheme);
+        safeStorageSet('rtlguard_theme', newTheme);
     };
 
     // ─────────────────────────────────────────────
