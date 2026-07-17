@@ -50,7 +50,13 @@ export default function Settings() {
     const [saveErr, setSaveErr] = useState('');
     const [saving, setSaving]   = useState(false);
 
-    const [geminiKey, setGeminiKey] = useState(() => localStorage.getItem('rtlguard_gemini_key') || '');
+    const [geminiKey, setGeminiKey] = useState(() => {
+        try {
+            return localStorage.getItem('rtlguard_gemini_key') || '';
+        } catch {
+            return '';
+        }
+    });
     const [showKey, setShowKey]     = useState(false);
     const [keySaved, setKeySaved]   = useState(false);
 
@@ -76,14 +82,22 @@ export default function Settings() {
     };
 
     const handleSaveGeminiKey = () => {
-        localStorage.setItem('rtlguard_gemini_key', geminiKey.trim());
+        try {
+            localStorage.setItem('rtlguard_gemini_key', geminiKey.trim());
+        } catch (e) {
+            console.warn('Failed to save Gemini Key to localStorage:', e);
+        }
         setKeySaved(true);
         setTimeout(() => setKeySaved(false), 2500);
     };
 
     const handleClearLocalData = () => {
         if (!window.confirm('Clear all local session data and cached preferences? You will be logged out.')) return;
-        localStorage.clear();
+        try {
+            localStorage.clear();
+        } catch (e) {
+            console.warn('Failed to clear localStorage:', e);
+        }
         window.location.reload();
     };
 

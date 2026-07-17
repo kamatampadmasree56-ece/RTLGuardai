@@ -99,7 +99,10 @@ export default function RTLAnalyzer() {
             log('Initiating Gemini AI Auto-Fix engine interface...');
             
             // Start the actual backend AI auto-fix and analysis call in parallel with simulation logs
-            const key = localStorage.getItem('rtlguard_gemini_key') || '';
+            let key = '';
+            try {
+                key = localStorage.getItem('rtlguard_gemini_key') || '';
+            } catch {}
             const apiPromise = apiEnhancedAnalysis(activeFile.originalContent || activeFile.content, key);
             
             await new Promise(r => setTimeout(r, 800));
@@ -137,7 +140,10 @@ export default function RTLAnalyzer() {
     const fetchEnhancedAnalysis = async () => {
         if (!activeFile) return;
         try {
-            const key = localStorage.getItem('rtlguard_gemini_key') || '';
+            let key = '';
+            try {
+                key = localStorage.getItem('rtlguard_gemini_key') || '';
+            } catch {}
             const data = await apiEnhancedAnalysis(activeFile.originalContent || activeFile.content, key);
             setEnhancedData(data);
             setCodeViewMode('corrected');
