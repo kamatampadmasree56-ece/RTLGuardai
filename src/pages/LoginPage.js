@@ -26,26 +26,30 @@ export default function LoginPage() {
         e.preventDefault();
         setError('');
 
+        const trimmedEmail = email.trim();
+        const trimmedName = name.trim();
+        const trimmedPassword = password.trim();
+
         // ── Client-side validation
-        if (!email || !password || (isSignUp && !name)) {
-            setError('Please fill in all required fields.');
+        if (!trimmedEmail || !trimmedPassword || (isSignUp && !trimmedName)) {
+            setError('Please fill in all required fields (spaces only are not allowed).');
             return;
         }
-        if (!email.includes('@') || email.length < 5) {
-            setError('Please enter a valid email address.');
+        if (!trimmedEmail.includes('@') || trimmedEmail.length < 5) {
+            setError('Please enter a valid corporate email address.');
             return;
         }
-        if (password.length < 6) {
-            setError('Password must be at least 6 characters.');
+        if (trimmedPassword.length < 6) {
+            setError('Password/Access token must be at least 6 characters long.');
             return;
         }
 
         // ── Call backend
         let result;
         if (isSignUp) {
-            result = await register(name, email, password, role);
+            result = await register(trimmedName, trimmedEmail, trimmedPassword, role);
         } else {
-            result = await login(email, password);
+            result = await login(trimmedEmail, trimmedPassword);
         }
 
         if (!result.success) {

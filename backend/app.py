@@ -15,6 +15,7 @@ from bson.errors import InvalidId
 from flask import Flask, request, jsonify, send_from_directory, Response
 from flask_cors import CORS
 from pymongo import MongoClient, DESCENDING
+from pymongo.errors import DuplicateKeyError
 import bcrypt
 
 from testbench_engine import (
@@ -50,7 +51,9 @@ try:
     client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=10000)
     client.admin.command("ping")
     db = client["rtlguard_db"]
-    print("[OK] MongoDB Atlas connected - rtlguard_db")
+    # Ensure database-level unique index on email
+    db["users"].create_index("email", unique=True)
+    print("[OK] MongoDB Atlas connected - rtlguard_db (Unique email index ensured)")
 except Exception as e:
     print(f"[ERROR] MongoDB connection failed: {e}")
     db = None
@@ -169,11 +172,15 @@ def register():
 
     pw_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
     ts = now()
-    res = users_col().insert_one({
-        "name": name, "email": email, "password_hash": pw_hash,
-        "role": role, "avatar": None, "created_at": ts, "last_login": ts,
-        "theme": "dark"
-    })
+    try:
+        res = users_col().insert_one({
+            "name": name, "email": email, "password_hash": pw_hash,
+            "role": role, "avatar": None, "created_at": ts, "last_login": ts,
+            "theme": "dark"
+        })
+    except DuplicateKeyError:
+        return err("Email already registered", 409)
+
     return ok({"userId": str(res.inserted_id), "name": name, "email": email,
                "role": role, "avatar": None, "theme": "dark"},
               "Registered successfully", 201)
